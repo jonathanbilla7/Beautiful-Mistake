@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Most Beautiful Mistake</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .title {
+            color: white;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1s forwards;
+        }
+
+        .canvas-container {
+            position: relative;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 1.5s forwards;
+        }
+
+        #mistakeCanvas {
+            background: rgba(255,255,255,0.1);
+            display: block;
+            backdrop-filter: blur(10px);
+        }
+
+        .instruction {
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            margin-top: 2rem;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 2s forwards;
+        }
+
+        .mistake-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 2.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .splash {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: splashGrow 0.8s ease-out forwards;
+        }
+
+        @keyframes splashGrow {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        .quote {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+            text-align: center;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 3s forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="mistake-counter">
+            Beautiful Mistakes: <span id="mistakeCount">0</span>
+        </div>
+        
+        <h1 class="title">The Most Beautiful Mistake</h1>
+        <p class="subtitle">Click anywhere to create accidental beauty</p>
+        
+        <div class="canvas-container">
+            <canvas id="mistakeCanvas" width="600" height="400"></canvas>
+        </div>
+        
+        <p class="instruction">Each click is an unplanned moment of creation</p>
+        
+        <div class="quote">
+            "The most beautiful things in the world cannot be seen or touched, 
+            they are felt with the heart... and discovered by accident."
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('mistakeCanvas');
+        const ctx = canvas.getContext('2d');
+        const mistakeCountElement = document.getElementById('mistakeCount');
+        
+        let mistakeCount = 0;
+        let colors = [
+            'rgba(255, 182, 193, 0.7)',
+            'rgba(173, 216, 230, 0.7)',
+            'rgba(255, 218, 185, 0.7)',
+            'rgba(221, 160, 221, 0.7)',
+            'rgba(144, 238, 144, 0.7)',
+            'rgba(255, 228, 181, 0.7)',
+            'rgba(176, 196, 222, 0.7)',
+            'rgba(255, 192, 203, 0.7)'
+        ];
+
+        function createMistake(x, y) {
+            mistakeCount++;
+            mistakeCountElement.textContent = mistakeCount;
+            
+            // Random offset to make it a "mistake"
+            const offsetX = (Math.random() - 0.5) * 100;
+            const offsetY = (Math.random() - 0.5) * 100;
+            const actualX = x + offsetX;
+            const actualY = y + offsetY;
+            
+            // Random size and color
+            const size = Math.random() * 60 + 20;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Draw the "mistake"
+            ctx.beginPath();
+            ctx.arc(actualX, actualY, size, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+            
+            // Add some texture
+            for (let i = 0; i < 5; i++) {
+                const smallX = actualX + (Math.random() - 0.5) * size;
+                const smallY = actualY + (Math.random() - 0.5) * size;
+                const smallSize = Math.random() * 10 + 2;
+                
+                ctx.beginPath();
+                ctx.arc(smallX, smallY, smallSize, 0, 2 * Math.PI);
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+                ctx.fill();
+            }
+            
+            // Create splash effect on the page
+            createSplashEffect(x, y);
+        }
+
+        function createSplashEffect(x, y) {
+            const splash = document.createElement('div');
+            splash.className = 'splash';
+            splash.style.left = x + 'px';
+            splash.style.top = y + 'px';
+            splash.style.width = '20px';
+            splash.style.height = '20px';
+            splash.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.body.appendChild(splash);
+            
+            setTimeout(() => {
+                document.body.removeChild(splash);
+            }, 800);
+        }
+
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            createMistake(x, y);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target !== canvas) {
+                createSplashEffect(e.clientX, e.clientY);
+            }
+        });
+
+        // Add some initial "accidental" marks
+        setTimeout(() => {
+            createMistake(150, 120);
+        }, 3000);
+        
+        setTimeout(() => {
+            createMistake(450, 280);
+        }, 4000);
+        
+        setTimeout(() => {
+            createMistake(300, 200);
+        }, 5000);
+    </script>
+</body>
+</html>
